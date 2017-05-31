@@ -1,4 +1,4 @@
-package io.simple.simple.dto;
+package io.simple.simple;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +12,7 @@ public class Room {
 
     @Id
     private String id;
+
     private String name;
     private String address;
 
@@ -27,6 +28,7 @@ public class Room {
     public String getName() {
         return name;
     }
+
 
 
 }
