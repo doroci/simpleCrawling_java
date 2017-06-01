@@ -31,35 +31,17 @@ public class Room {
         this.address = address;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getLocal1() {
-        return local1;
-    }
 
     public String getLocal2() {
         return local2;
     }
 
-    public String getLocal3() {
-        return local3;
-    }
 
-    public String getAddress() {
-        return address;
+    @Override
+    public String toString() {
+        return String.format(
+                "%s, [지번주소: %s %s %s], [도로명 주소: %s]",
+                name, local1, local2, local3, address);
     }
-
-//    @Override
-//    public String toString() {
-//        return String.format(
-//                "%s, [지번주소: %s %s %s], [도로명 주소: %s]",
-//                name, local1, local2, local3, address);
-//    }
 
 }

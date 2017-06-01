@@ -48,10 +48,13 @@ public class CrawlingApplicationTests {
             return result;
         }
 
+
         List<Room> rooms = roomRepository.findAll();
 
         for (Room r: rooms) {
 
+            // API변경에 따라 ["신도림", "마포", "종로"]에 속하는
+            // local2["구로구", "마포구", "종로구", "구로구", "중구", "영동구"]값이 변경 될 수도 있음.
             if (r.getLocal2().contains("구로구") || r.getLocal2().contains("마포구") || r.getLocal2().contains("종로구")
                 || r.getLocal2().contains("중구") || r.getLocal2().contains("영도구") ){
 
@@ -96,7 +99,6 @@ public class CrawlingApplicationTests {
             }
         }
 
-        System.out.println("roomRepository.count() :" +roomRepository.count());
         assertTrue(isTrue(roomRepository));
 	}
 
