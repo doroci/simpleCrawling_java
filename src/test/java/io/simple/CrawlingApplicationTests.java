@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
@@ -31,29 +30,33 @@ public class CrawlingApplicationTests {
     @Autowired
     private RoomRepository roomRepository;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+
 
     @Before
     public void setUp() throws Exception {
         roomRepository.deleteAll();
     }
 
+
+
     public boolean isTrue(RoomRepository roomRepository) {
 
-        boolean result = false;
+        boolean result = true;
 
         if (roomRepository.count() == 0) {
+            result = false;
             return result;
         }
 
         List<Room> rooms = roomRepository.findAll();
 
         for (Room r: rooms) {
-            if (r.getLocal2().equals("종로구") || r.getLocal2().equals("마포구") || r.getLocal2().equals("구로구")) {
-                result = true;
-            } else {
 
+            if (r.getLocal2().contains("구로구") || r.getLocal2().contains("마포구") || r.getLocal2().contains("종로구")
+                || r.getLocal2().contains("중구") || r.getLocal2().contains("영도구") ){
+
+            } else {
+                result = false;
             }
         }
         return result;
@@ -93,14 +96,13 @@ public class CrawlingApplicationTests {
             }
         }
 
+        System.out.println("roomRepository.count() :" +roomRepository.count());
         assertTrue(isTrue(roomRepository));
 	}
 
 
     @Test
     public void testInputData() throws IOException {
-
-        roomRepository.deleteAll();
 
         HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
 
@@ -139,8 +141,6 @@ public class CrawlingApplicationTests {
 
     @Test
     public void testType() throws IOException {
-
-        roomRepository.deleteAll();
 
         HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
 

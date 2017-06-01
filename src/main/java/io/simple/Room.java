@@ -55,11 +55,11 @@ public class Room {
         return address;
     }
 
-    @Override
-    public String toString() {
-        return String.format(
-                "%s, [지번주소: %s %s %s], [도로명 주소: %s]",
-                name, local1, local2, local3, address);
-    }
+//    @Override
+//    public String toString() {
+//        return String.format(
+//                "%s, [지번주소: %s %s %s], [도로명 주소: %s]",
+//                name, local1, local2, local3, address);
+//    }
 
 }
