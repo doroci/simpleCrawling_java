@@ -5,8 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -16,25 +14,51 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
+import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CrawlingApplicationTests {
 
-    private static final Log log = LogFactory.getLog(CrawlingApplicationTests.class);
-
     @Autowired
     private RoomRepository roomRepository;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Before
     public void setUp() throws Exception {
         roomRepository.deleteAll();
     }
+
+    public boolean isTrue(RoomRepository roomRepository) {
+
+        boolean result = false;
+
+        if (roomRepository.count() == 0) {
+            return result;
+        }
+
+        List<Room> rooms = roomRepository.findAll();
+
+        for (Room r: rooms) {
+            if (r.getLocal2().equals("종로구") || r.getLocal2().equals("마포구") || r.getLocal2().equals("구로구")) {
+                result = true;
+            } else {
+
+            }
+        }
+        return result;
+    }
+
 
     @Test
 	public void testCrawling() throws IOException {
@@ -42,7 +66,6 @@ public class CrawlingApplicationTests {
         HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
 
         String[] location = {"신도림", "마포", "종로"};
-//        Set roomIdDataSet = new HashSet<String>();
 
         for (String lo: location) {
 
@@ -55,6 +78,8 @@ public class CrawlingApplicationTests {
 
             JsonArray jarray = jsonObject.getAsJsonArray("buildings");
 
+            // "name", "local1", "local2", "local3", "신주소" 의 정보를 가져와 mongoDB에 저장
+            //  mongoDBName: "room", collection = "seoul"
             for (final JsonElement e: jarray) {
                 roomRepository.save(
                         new Room(
@@ -68,18 +93,84 @@ public class CrawlingApplicationTests {
             }
         }
 
-
-//        roomRepository.findByLocal3("합정동").forEach(System.out::println);
-
-//        roomRepository.findByLocal3("낙동원동").forEach(System.out::println);
-
-
-
-
+        assertTrue(isTrue(roomRepository));
 	}
 
 
+    @Test
+    public void testInputData() throws IOException {
+
+        roomRepository.deleteAll();
+
+        HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
+
+        String[] location = {"a", "b", "c"};
+
+        for (Object lo: location) {
+
+            HttpGet request = new HttpGet("https://apis.zigbang.com/property/search/rooms/v1?q=" +lo); // request 정보
+            request.addHeader("accept", "application/json");	//해더 정보 설정
+            HttpResponse response = client.execute(request);	// request 요청
+            String contents = IOUtils.toString(response.getEntity().getContent());	//response 정보
+
+            JsonObject jsonObject = new JsonParser().parse(contents).getAsJsonObject();
+
+            JsonArray jarray = jsonObject.getAsJsonArray("buildings");
+
+            // "name", "local1", "local2", "local3", "신주소" 의 정보를 가져와 mongoDB에 저장
+            //  mongoDBName: "room", collection = "seoul"
+            for (final JsonElement e: jarray) {
+                roomRepository.save(
+                        new Room(
+                                e.getAsJsonObject().get("name").toString()
+                                ,e.getAsJsonObject().get("local1").toString()
+                                ,e.getAsJsonObject().get("local2").toString()
+                                ,e.getAsJsonObject().get("local3").toString()
+                                ,e.getAsJsonObject().get("신주소").toString())
+                );
+
+            }
+        }
+
+        assertFalse(isTrue(roomRepository));
+
+    }
 
 
+    @Test
+    public void testType() throws IOException {
 
+        roomRepository.deleteAll();
+
+        HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
+
+        int[] location = {1, 2, 3};
+
+        for (int lo: location) {
+
+            HttpGet request = new HttpGet("https://apis.zigbang.com/property/search/rooms/v1?q=" +lo); // request 정보
+            request.addHeader("accept", "application/json");	//해더 정보 설정
+            HttpResponse response = client.execute(request);	// request 요청
+            String contents = IOUtils.toString(response.getEntity().getContent());	//response 정보
+
+            JsonObject jsonObject = new JsonParser().parse(contents).getAsJsonObject();
+
+            JsonArray jarray = jsonObject.getAsJsonArray("buildings");
+
+            // "name", "local1", "local2", "local3", "신주소" 의 정보를 가져와 mongoDB에 저장
+            //  mongoDBName: "room", collection = "seoul"
+            for (final JsonElement e: jarray) {
+                roomRepository.save(
+                        new Room(
+                                e.getAsJsonObject().get("name").toString()
+                                ,e.getAsJsonObject().get("local1").toString()
+                                ,e.getAsJsonObject().get("local2").toString()
+                                ,e.getAsJsonObject().get("local3").toString()
+                                ,e.getAsJsonObject().get("신주소").toString())
+                );
+
+            }
+        }
+        assertFalse(isTrue(roomRepository));
+    }
 }

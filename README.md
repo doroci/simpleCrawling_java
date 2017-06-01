@@ -9,6 +9,18 @@ https://www.zigbang.com/search/officetel
 ## 검색(지역명) URI 추출
 검색(지역명)에 따른 서버 쪽에 요청하는 http Get Method 정보를 추출한다.
 
+`https://apis.zigbang.com/property/search/rooms/v1?q="검색어(지역명)"`
+
 ![검색어 URI 추출](/img/getRoomIds.jpg)
 
-`https://apis.zigbang.com/property/search/rooms/v1?q="검색어(지역명)"`
+
+## spring-data-mongodb
+json Data를 적재하기 위해 mongodb를 사용
+- http://projects.spring.io/spring-data-mongodb/
+- https://spring.io/guides/gs/accessing-data-mongodb/
+- mongodb Client
+  - https://robomongo.org/
+  - intelij mongo plugin
+  
+
+## Run CrawlingApplicationTests
