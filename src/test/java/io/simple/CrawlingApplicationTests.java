@@ -10,6 +10,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class CrawlingApplicationTests {
     }
 
     @Test
-	public void testCrawling() throws IOException {
+    public void testCrawling() throws IOException {
 
         HttpClient client = HttpClientBuilder.create().build();// HttpClient 인스턴스 생성
 
@@ -47,7 +48,6 @@ public class CrawlingApplicationTests {
 
             httpReqAndRes(client, lo);
         }
-
         assertTrue(isTrue(roomRepository));
 	}
 
@@ -86,11 +86,16 @@ public class CrawlingApplicationTests {
         HttpResponse response = client.execute(request);	// request 요청
         String contents = IOUtils.toString(response.getEntity().getContent());	//response 정보
 
-        JsonArray jarray = jsonParse(contents);
+        if (response.getStatusLine().getStatusCode() == 200) {
 
-        // "name", "local1", "local2", "local3", "신주소" 의 정보를 가져와 mongoDB에 저장
-        //  mongoDBName: "room", collection = "seoul"
-        saveToMongoDB(jarray);
+            JsonArray jarray = jsonParse(contents);
+
+            // "name", "local1", "local2", "local3", "신주소" 의 정보를 가져와 mongoDB에 저장
+            //  mongoDBName: "room", collection = "seoul"
+            saveToMongoDB(jarray);
+        }
+
+
     }
 
     private void saveToMongoDB(JsonArray jarray) {
