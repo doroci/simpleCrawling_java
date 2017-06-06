@@ -16,13 +16,20 @@ https://www.zigbang.com/search/officetel
 
 ## spring-data-mongodb
 json Data를 적재하기 위해 mongodb를 사용
-- http://projects.spring.io/spring-data-mongodb/
-- https://spring.io/guides/gs/accessing-data-mongodb/
-- mongodb Client
-  - https://robomongo.org/
-  - intelij mongo plugin
+- [spring-data-mongodb](http://projects.spring.io/spring-data-mongodb)
+- [accessing-data-mongodb](https://spring.io/guides/gs/accessing-data-mongodb)
+
+## mongoDB 설치
+- [mongoDB install](https://docs.mongodb.com/manual/administration/install-community)
+
+## mongodb Client
+- [robomongo](https://robomongo.org)
+- [인텔리J 플러그인](https://plugins.jetbrains.com/plugin/7141-mongo-plugin)
   
 
 ## run CrawlingApplicationTests
+```
+/src/test/java/io/simple/CrawlingApplicationTests
+```
 
 
